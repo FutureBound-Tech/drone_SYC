@@ -36,3 +36,4 @@ Settings and profiles are saved under `user://rotorline.cfg`. Current device map
 
 For a Linux Steam build, install matching Godot 4.7.2 export templates and export the included **Linux/X11 x86_64** preset. It writes `build/rotorline.x86_64`. Steam depot configuration and store publishing remain release operations.
 # drone_SYC
+# drone_SYC
