@@ -1,0 +1,35 @@
+#!/bin/sh
+set -eu
+
+PROJECT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+BUNDLED_GODOT="$PROJECT_DIR/Godot_v4.7.2-stable_linux.x86_64"
+
+# XKB can resolve bare en_IN to a legacy ISO-8859-1 Compose table.
+if [ "${LANG:-}" = "en_IN" ]; then
+	export LANG="en_IN.UTF-8"
+fi
+
+if [ -x "$BUNDLED_GODOT" ]; then
+	GODOT_COMMAND=$BUNDLED_GODOT
+elif command -v godot >/dev/null 2>&1; then
+	GODOT_COMMAND=$(command -v godot)
+elif command -v godot4 >/dev/null 2>&1; then
+	GODOT_COMMAND=$(command -v godot4)
+else
+	printf '%s\n' 'Godot was not found. Put Godot 4.7.2 in this folder or install godot/godot4 on PATH.' >&2
+	exit 127
+fi
+
+case "${1:-start}" in
+	dev|editor)
+		if [ "$#" -gt 0 ]; then shift; fi
+		exec "$GODOT_COMMAND" --editor --path "$PROJECT_DIR" "$@"
+		;;
+	start|run)
+		if [ "$#" -gt 0 ]; then shift; fi
+		exec "$GODOT_COMMAND" --path "$PROJECT_DIR" "$@"
+		;;
+	*)
+		exec "$GODOT_COMMAND" --path "$PROJECT_DIR" "$@"
+		;;
+esac
